@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691058115506",
+    "project_id": "hadafi-47b0e",
+    "storage_bucket": "hadafi-47b0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691058115506:android:ac7cd9f0d543673166daab",
+        "android_client_info": {
+          "package_name": "com.mehdigriche.hadafi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBehwoG4ygiUH93f2KDgc9rVrrb5AlVlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
