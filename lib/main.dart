@@ -4,6 +4,11 @@ import '../screens/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+// * Important information
+// ? Question
+// TODO: a todo
+// ! Alert
+
 void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure WidgetsBinding is initialized

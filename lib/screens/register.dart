@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hadafi/screens/home.dart';
+import '../screens/home.dart';
 import '../components/hadafi_button.dart';
 import '../components/hadafi_social_signin_button.dart';
 import '../components/hadafi_textfield.dart';
@@ -13,12 +13,13 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _confirmPasswordController = TextEditingController();
   // Text editing controllers
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isPasswordVerified = false;
+
   bool _isEmailVerified = false;
+  bool _isPasswordVerified = false;
+  final _passwordController = TextEditingController();
 
   // Sign user in method
   void signUpUser() async {
@@ -40,10 +41,11 @@ class _RegisterState extends State<Register> {
       );
       // pop the loading circle
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Home(),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -58,7 +60,7 @@ class _RegisterState extends State<Register> {
         registerErrorPopup('Something went wrong, try again later!');
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -112,7 +114,7 @@ class _RegisterState extends State<Register> {
               HadafiTextField(
                 controller: _emailController,
                 onChanged: (text) {
-                  print(text);
+                  debugPrint(text);
                   // run email checker
                   setState(() {
                     _isEmailVerified = text.toString().contains("@");
@@ -128,7 +130,7 @@ class _RegisterState extends State<Register> {
               HadafiTextField(
                 controller: _passwordController,
                 onChanged: (text) {
-                  print(text);
+                  debugPrint(text);
                   // run password checker
                   setState(() {
                     _isPasswordVerified =
@@ -145,7 +147,7 @@ class _RegisterState extends State<Register> {
               HadafiTextField(
                 controller: _confirmPasswordController,
                 onChanged: (text) {
-                  print(text);
+                  debugPrint(text);
                   // run confirm password checker
                   setState(() {
                     _isPasswordVerified = text == _passwordController.text;

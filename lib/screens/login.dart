@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hadafi/screens/register.dart';
 import '../components/hadafi_button.dart';
 import '../components/hadafi_social_signin_button.dart';
@@ -194,7 +193,9 @@ class _LoginState extends State<Login> {
                       debugPrint('Register clicked');
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Register()),
+                        MaterialPageRoute(
+                          builder: (context) => const Register(),
+                        ),
                       );
                     },
                     child: Text(

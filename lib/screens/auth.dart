@@ -18,7 +18,7 @@ class Auth extends StatelessWidget {
           }
           // user is NOT logged in
           else {
-            return Login();
+            return const Login();
           }
         },
       ),
