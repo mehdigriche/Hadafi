@@ -12,7 +12,12 @@
           "package_name": "com.mehdigriche.hadafi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "691058115506-6ug1928k4pnm78vij4o50u1psmkt3q53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCBehwoG4ygiUH93f2KDgc9rVrrb5AlVlk"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691058115506-6ug1928k4pnm78vij4o50u1psmkt3q53.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "691058115506-vb7okhdociqbaeup846meb5n9ku6p47e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mehdigriche.hadafi"
+              }
+            }
+          ]
         }
       }
     }

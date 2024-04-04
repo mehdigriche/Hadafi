@@ -13,13 +13,13 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final _confirmPasswordController = TextEditingController();
   // Text editing controllers
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool _isEmailVerified = false;
   bool _isPasswordVerified = false;
-  final _passwordController = TextEditingController();
 
   // Sign user in method
   void signUpUser() async {
@@ -49,16 +49,8 @@ class _RegisterState extends State<Register> {
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
-      if (e.code == 'weak-password') {
-        // show error to user
-        registerErrorPopup('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        // show error to user
-        registerErrorPopup('The account already exists for that email.');
-      } else {
-        // show error to user
-        registerErrorPopup('Something went wrong, try again later!');
-      }
+      // show error to user
+      registerErrorPopup(e.code);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -87,167 +79,163 @@ class _RegisterState extends State<Register> {
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              // logo
-              const Icon(
-                Icons.person_add,
-                size: 70,
-              ),
-
-              const SizedBox(height: 25),
-
-              // Let's create an account for you!
-              Text(
-                'Let\'s create an account for you!',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                // logo
+                const Icon(
+                  Icons.person_add,
+                  size: 70,
                 ),
-              ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 25),
 
-              // email textfield
-              HadafiTextField(
-                controller: _emailController,
-                onChanged: (text) {
-                  debugPrint(text);
-                  // run email checker
-                  setState(() {
-                    _isEmailVerified = text.toString().contains("@");
-                  });
-                },
-                hintText: 'Enter your email',
-                isPassword: false,
-              ),
+                // Let's create an account for you!
+                Text(
+                  'Let\'s create an account for you!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 25),
 
-              // password textfield
-              HadafiTextField(
-                controller: _passwordController,
-                onChanged: (text) {
-                  debugPrint(text);
-                  // run password checker
-                  setState(() {
-                    _isPasswordVerified =
-                        text == _confirmPasswordController.text;
-                  });
-                },
-                hintText: 'Password',
-                isPassword: true,
-              ),
+                // email textfield
+                HadafiTextField(
+                  controller: _emailController,
+                  onChanged: (text) {
+                    debugPrint(text);
+                    // run email checker
+                    setState(() {
+                      _isEmailVerified = text.toString().contains("@");
+                    });
+                  },
+                  hintText: 'Enter your email',
+                  isPassword: false,
+                ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-              // confirm password textfield
-              HadafiTextField(
-                controller: _confirmPasswordController,
-                onChanged: (text) {
-                  debugPrint(text);
-                  // run confirm password checker
-                  setState(() {
-                    _isPasswordVerified = text == _passwordController.text;
-                  });
-                },
-                hintText: 'Confirm Password',
-                isPassword: true,
-              ),
+                // password textfield
+                HadafiTextField(
+                  controller: _passwordController,
+                  onChanged: (text) {
+                    debugPrint(text);
+                    // run password checker
+                    setState(() {
+                      _isPasswordVerified =
+                          text == _confirmPasswordController.text;
+                    });
+                  },
+                  hintText: 'Password',
+                  isPassword: true,
+                ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 10),
 
-              // forgot password
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                // confirm password textfield
+                HadafiTextField(
+                  controller: _confirmPasswordController,
+                  onChanged: (text) {
+                    debugPrint(text);
+                    // run confirm password checker
+                    setState(() {
+                      _isPasswordVerified = text == _passwordController.text;
+                    });
+                  },
+                  hintText: 'Confirm Password',
+                  isPassword: true,
+                ),
+
+                const SizedBox(height: 25),
+
+                // sign in button
+                HadafiButton(
+                  onPressed: signUpUser,
+                  buttonText: 'Sign Up',
+                  isEnabled: isSignUpEnabled(),
+                ),
+
+                const SizedBox(height: 50),
+
+                // or continue with
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 50),
+
+                // google + apple sign up buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HadafiSocialSignInButton(
+                        action: () {
+                          //Perform login with Google
+                          debugPrint('Perform login with Apple');
+                        },
+                        imagePath: 'assets/images/appleSignInButton.png'),
+                    const SizedBox(width: 25),
+                    HadafiSocialSignInButton(
+                        action: () {
+                          //Perform login with Google
+                          debugPrint('Perform login with Google');
+                        },
+                        imagePath: 'assets/images/googleSignInButton.png')
+                  ],
+                ),
+
+                // Already have an account? login now
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
+                      'Already have an account?',
+                      style: TextStyle(color: Colors.grey[700]),
                     ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // sign in button
-              HadafiButton(
-                onPressed: signUpUser,
-                buttonText: 'Sign Up',
-                isEnabled: isSignUpEnabled(),
-              ),
-
-              const SizedBox(height: 50),
-
-              // or continue with
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () {
+                        debugPrint('Login clicked');
+                        Navigator.pop(context);
+                      },
                       child: Text(
-                        'Or continue with',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
+                        'Login now',
+                        style: TextStyle(
+                            color: Colors.blue[500],
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(height: 50),
-
-              // google + apple sign up buttons
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  HadafiSocialSignInButton(
-                      imagePath: 'assets/images/appleSignInButton.png'),
-                  SizedBox(width: 25),
-                  HadafiSocialSignInButton(
-                      imagePath: 'assets/images/googleSignInButton.png')
-                ],
-              ),
-
-              // Already have an account? login now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account?',
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                  const SizedBox(width: 4),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Login now',
-                      style: TextStyle(
-                          color: Colors.blue[500], fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
