@@ -1,9 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../components/hadafi_appbar.dart';
-import '../model/todo.dart';
-import '../constants/colors.dart';
-import '../components/hadafi_todo_item.dart';
+import 'package:hadafi/components/hadafi_drawer.dart';
+import 'package:hadafi/components/hadafi_hadaf_item.dart';
+import 'package:hadafi/components/hadafi_heat_map.dart';
+import 'package:hadafi/database/hadafi_database.dart';
+import 'package:hadafi/model/hadaf.dart';
+import 'package:hadafi/util/hadafi_util.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,204 +15,263 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final todosList = ToDo.todoList();
-  List<ToDo> _filteredToDo = [];
-  final _todoController = TextEditingController();
-  final _filterController = TextEditingController();
-  final _user = FirebaseAuth.instance.currentUser!;
+  final _textController = TextEditingController();
   bool _isTyping = false;
 
   @override
   void initState() {
-    _filteredToDo = todosList;
+    // read the existing hadafs on app startup
+    Provider.of<HadafiDatabase>(context, listen: false).readHadafs();
+
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: tdBGColor,
-      appBar: const HadafiAppBar(),
-      body: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
-            child: Column(
-              children: [
-                searchBox(),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 50,
-                          bottom: 20,
-                        ),
-                        child: Text(
-                          'Welcome to Hadafis, ${_user.email!}',
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      for (ToDo todo in _filteredToDo.reversed)
-                        HadafiTodoItem(
-                          todo: todo,
-                          onToDoChanged: _handleToDoChange,
-                          onDeleteItem: _handleToDoDelete,
-                        ),
-                    ],
-                  ),
+  // create new hadaf
+  void createNewHadaf() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, StateSetter setState) {
+            return AlertDialog(
+              content: TextField(
+                controller: _textController,
+                onChanged: (value) {
+                  setState(() {
+                    _isTyping = value.isEmpty ? false : true;
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Create a new Hadaf',
+                ),
+              ),
+              actions: [
+                // save button
+                MaterialButton(
+                  onPressed: _isTyping
+                      ? () {
+                          _handleHadafAdd(_textController.text);
+                        }
+                      : null,
+                  child: const Text('Save'),
+                ),
+
+                // cancel button
+                MaterialButton(
+                  onPressed: () {
+                    // pop box
+                    Navigator.pop(context);
+
+                    // clear controller
+                    _textController.clear();
+                  },
+                  child: const Text('Cancel'),
                 ),
               ],
-            ),
+            );
+          });
+        });
+  }
+
+  void _handleHadafAdd(String hadafName) {
+    setState(() {
+      if (hadafName != "") {
+        _isTyping = false;
+        // get the new hadaf name
+        String newHadafName = hadafName;
+
+        // save it to db
+        context.read<HadafiDatabase>().addHadaf(newHadafName);
+
+        // pop box
+        Navigator.pop(context);
+      }
+    });
+    // clear controller
+    _textController.clear();
+  }
+
+  // edit Hadaf
+  void editHadafBox(Hadaf hadaf) {
+    // set the controller's text to the hadaf's current name
+    _textController.text = hadaf.name;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: TextField(
+          controller: _textController,
+          decoration: const InputDecoration(
+            hintText: 'Enter the Hadaf\'s name',
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 20,
-                      right: 20,
-                      left: 20,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 0.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 0.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextField(
-                      controller: _todoController,
-                      onChanged: (value) {
-                        setState(() {
-                          _isTyping = value.isEmpty ? false : true;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Add new Hadaf',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    bottom: 20,
-                    right: 20,
-                  ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(60, 60),
-                      elevation: 5.0,
-                      backgroundColor: _isTyping ? tdBlue : Colors.black26,
-                    ),
-                    onPressed: () {
-                      // print('Pressed add todo button');
-                      _handleToDoAdd(_todoController.text);
-                    },
-                    child: const Text(
-                      '+',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        ),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: () {
+              // get the new hadaf name
+              String newHadafName = _textController.text;
+
+              // save it to db
+              context
+                  .read<HadafiDatabase>()
+                  .updateHadafName(hadaf.id, newHadafName);
+
+              // pop box
+              Navigator.pop(context);
+
+              // clear controller
+              _textController.clear();
+            },
+            child: const Text('Save'),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: () {
+              // pop box
+              Navigator.pop(context);
+
+              // clear controller
+              _textController.clear();
+            },
+            child: const Text('Cancel'),
           ),
         ],
       ),
     );
   }
 
-  void _handleToDoChange(ToDo todo) {
-    setState(() {
-      todo.isDone = !todo.isDone;
-    });
-  }
+  // delete Hadaf
+  void deleteHadafBox(Hadaf hadaf) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure you want to delete?'),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: () {
+              // save it to db
+              context.read<HadafiDatabase>().deleteHadaf(hadaf.id);
 
-  void _handleToDoDelete(String id) {
-    setState(() {
-      todosList.removeWhere((item) => item.id == id);
-    });
-  }
-
-  void _handleToDoAdd(String todoText) {
-    setState(() {
-      if (todoText != "") {
-        _isTyping = false;
-        todosList.add(
-          ToDo(
-            id: DateTime.now().microsecondsSinceEpoch.toString(),
-            todoText: todoText,
+              // pop box
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.check),
           ),
-        );
-      }
-    });
-    _todoController.clear();
-  }
 
-  void _runFilter(String enteredKeyword) {
-    List<ToDo> results = [];
-    if (enteredKeyword.isEmpty) {
-      results = todosList;
-    } else {
-      results = todosList
-          .where((todo) => todo.todoText!
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
-          .toList();
-    }
+          // cancel button
+          MaterialButton(
+            onPressed: () {
+              // pop box
+              Navigator.pop(context);
 
-    setState(() {
-      _filteredToDo = results;
-    });
-  }
-
-  Widget searchBox() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+              // clear controller
+              _textController.clear();
+            },
+            child: const Icon(Icons.close),
+          ),
+        ],
       ),
-      child: TextField(
-        controller: _filterController,
-        onChanged: (text) {
-          _runFilter(text);
-        },
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(0),
-          prefixIcon: Icon(
-            Icons.search,
-            color: tdBlack,
-            size: 20,
-          ),
-          prefixIconConstraints: BoxConstraints(
-            maxHeight: 20,
-            minWidth: 25,
-          ),
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: TextStyle(color: tdGrey),
+    );
+  }
+
+  // check hadaf on or off
+  void checkHadafOnOff(bool? value, Hadaf hadaf) {
+    // update the hadaf completion status
+    if (value != null) {
+      context.read<HadafiDatabase>().updateHadafCompletion(hadaf.id, value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      drawer: const HadafiDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createNewHadaf,
+        elevation: 3,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
+      body: ListView(
+        children: [
+          // Heatmap
+          _buildHeatMap(),
+
+          // Hadaf List
+          _buildHadafList(),
+        ],
+      ),
+    );
+  }
+
+  // build heat map
+  Widget _buildHeatMap() {
+    // hadaf database
+    final hadafiDatabase = context.watch<HadafiDatabase>();
+    // current hadafs
+    List<Hadaf> currentHadafs = hadafiDatabase.currentHadafs;
+
+    // return heat map UI
+    return FutureBuilder<DateTime?>(
+      future: hadafiDatabase.getFirstLaunchDate(),
+      builder: (context, snapshot) {
+        // once the data is available -> build heatmap
+        if (snapshot.hasData) {
+          return HadafiHeatMap(
+            startDate: snapshot.data!,
+            dataSets: prepHeatMapDataset(currentHadafs),
+          );
+        }
+
+        // handle case where no data is returned
+        else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  // build hadaf list
+  Widget _buildHadafList() {
+    // habit db
+    final hadafiDatabase = context.watch<HadafiDatabase>();
+    // current hadafs
+    List<Hadaf> currentHadafs = hadafiDatabase.currentHadafs;
+
+    // return list of hadafs UI
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: currentHadafs.length,
+      itemBuilder: (context, index) {
+        // get each individual hadaf
+        final hadaf = currentHadafs[index];
+
+        // check if the hadaf is completed today
+        bool isCompletedToday = isHadafCompletedToday(hadaf.completedDays);
+
+        // return tile UI
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 25),
+          title: HadafiHadafItem(
+            isCompleted: isCompletedToday,
+            text: hadaf.name,
+            onChanged: (value) => checkHadafOnOff(value, hadaf),
+            editHadaf: (context) => editHadafBox(hadaf),
+            deleteHadaf: (context) => deleteHadafBox(hadaf),
+          ),
+        );
+      },
     );
   }
 }

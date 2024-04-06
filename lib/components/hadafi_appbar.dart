@@ -17,13 +17,13 @@ class HadafiAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: tdBGColor,
+      backgroundColor: hadafiBGColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Icon(
             Icons.menu,
-            color: tdBlack,
+            color: hadafiBlack,
             size: 30,
           ),
           SizedBox(

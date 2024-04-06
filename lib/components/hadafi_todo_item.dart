@@ -32,13 +32,13 @@ class HadafiTodoItem extends StatelessWidget {
         tileColor: Colors.white,
         leading: Icon(
           todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-          color: tdBlue,
+          color: hadafiBlue,
         ),
         title: Text(
           todo.todoText!,
           style: TextStyle(
             fontSize: 16,
-            color: tdBlack,
+            color: hadafiBlack,
             decoration: todo.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
@@ -48,7 +48,7 @@ class HadafiTodoItem extends StatelessWidget {
           height: 35,
           width: 35,
           decoration: BoxDecoration(
-            color: tdRed,
+            color: hadafiRed,
             borderRadius: BorderRadius.circular(5),
           ),
           child: IconButton(
