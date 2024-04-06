@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hadafi/components/hadafi_appbar.dart';
 import 'package:hadafi/components/hadafi_drawer.dart';
 import 'package:hadafi/components/hadafi_hadaf_item.dart';
 import 'package:hadafi/components/hadafi_heat_map.dart';
@@ -17,6 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _textController = TextEditingController();
   bool _isTyping = false;
+  final _user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
@@ -72,6 +75,7 @@ class _HomeState extends State<Home> {
         });
   }
 
+  // Check if input empty before add hadaf
   void _handleHadafAdd(String hadafName) {
     setState(() {
       if (hadafName != "") {
@@ -188,11 +192,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      drawer: const HadafiDrawer(),
+      appBar: const HadafiAppBar(),
+      drawer: HadafiDrawer(username: _user.email!),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHadaf,
         elevation: 3,

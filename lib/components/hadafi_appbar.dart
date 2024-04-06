@@ -1,49 +1,39 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
 
 class HadafiAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HadafiAppBar({super.key});
+  final String title;
+  final bool hasAvatar;
+
+  const HadafiAppBar({
+    super.key,
+    this.title = "",
+    this.hasAvatar = true,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(100);
 
-  void signOut() async {
-    debugPrint('Performing Logout');
-    await FirebaseAuth.instance.signOut();
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
-      backgroundColor: hadafiBGColor,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(
-            Icons.menu,
-            color: hadafiBlack,
-            size: 30,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: hasAvatar ? _hasAvatar() : Text(title));
+  }
+
+  Widget _hasAvatar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        SizedBox(
+          height: 40,
+          width: 40,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset('assets/images/avatar.jpeg'),
           ),
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset('assets/images/avatar.jpeg'),
-            ),
-          ),
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: TextButton(
-              onPressed: signOut,
-              child: const Icon(Icons.logout),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
