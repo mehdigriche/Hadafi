@@ -21,7 +21,7 @@ class HadafiHadafItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slidable(
       endActionPane: ActionPane(
-        motion: const StretchMotion(),
+        motion: const ScrollMotion(),
         children: [
           // edit option
           SlidableAction(
@@ -31,7 +31,8 @@ class HadafiHadafItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
 
-          Container(width: 5),
+          const SizedBox(width: 5),
+
           // delete option
           SlidableAction(
             onPressed: deleteHadaf,

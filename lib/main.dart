@@ -6,6 +6,7 @@ import 'package:hadafi/screens/home.dart';
 import 'package:hadafi/screens/login.dart';
 import 'package:hadafi/screens/profile.dart';
 import 'package:hadafi/screens/register.dart';
+import 'package:hadafi/screens/settings.dart';
 import 'package:hadafi/theme/dark_mode.dart';
 import '../theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const Register(),
         '/home': (context) => const Home(),
         '/profile': (context) => const Profile(),
+        '/settings': (context) => const Settings(),
       },
       // darkTheme: darkMode,
     );

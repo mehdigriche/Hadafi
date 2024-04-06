@@ -44,7 +44,10 @@ class HadafiDrawer extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.home),
                   title: const Text('H O M E'),
-                  onTap: () {},
+                  onTap: () {
+                    // pop drawer
+                    Navigator.pop(context);
+                  },
                 ),
               ),
               // profile
@@ -61,7 +64,22 @@ class HadafiDrawer extends StatelessWidget {
                   },
                 ),
               ),
+              // Settings
+              Padding(
+                padding: const EdgeInsets.only(left: 25.0),
+                child: ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('S E T T I N G S'),
+                  onTap: () {
+                    // pop drawer
+                    Navigator.pop(context);
+                    // navigate to profile page
+                    Navigator.pushNamed(context, '/settings');
+                  },
+                ),
+              ),
               // toggle theme
+              // TODO : move to settings or profile
               Padding(
                 padding: const EdgeInsets.only(left: 25.0),
                 child: ListTile(
@@ -69,8 +87,8 @@ class HadafiDrawer extends StatelessWidget {
                       ? const Icon(Icons.light_mode)
                       : const Icon(Icons.mode_night),
                   title: Provider.of<ThemeProvider>(context).isDarkMode
-                      ? const Text('Toggle light mode')
-                      : const Text('Toggle dark mode'),
+                      ? const Text('Light mode')
+                      : const Text('Dark mode'),
                   trailing: CupertinoSwitch(
                     value: Provider.of<ThemeProvider>(context).isDarkMode,
                     onChanged: (value) {

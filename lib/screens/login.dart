@@ -99,12 +99,12 @@ class _LoginState extends State<Login> {
                 // email textfield
                 HadafiTextField(
                   controller: _emailController,
-                  onChanged: (text) {
+                  onChanged: (email) {
                     debugPrint(
-                        '$text / value of _isEmailVerified : $_isEmailVerified');
+                        '$email / value of _isEmailVerified : $_isEmailVerified');
                     // run email checker
                     setState(() {
-                      _isEmailVerified = EmailValidator.validate(text);
+                      _isEmailVerified = EmailValidator.validate(email);
                     });
                   },
                   hintText: 'Enter your email',
