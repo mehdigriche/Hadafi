@@ -62,7 +62,8 @@ Future<String> displayUserName(User? currentUser) async {
       }
     }
   }
-  return 'User not found';
+  // Return google username
+  return currentUser!.displayName.toString();
 }
 
 // get user birthday

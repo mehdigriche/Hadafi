@@ -269,7 +269,7 @@ class _RegisterState extends State<Register> {
                   children: [
                     HadafiSocialSignInButton(
                         action: () {
-                          //Perform login with Google
+                          //Perform login with Apple
                           debugPrint('Perform login with Apple');
                         },
                         imagePath: 'assets/images/appleSignInButton.png'),

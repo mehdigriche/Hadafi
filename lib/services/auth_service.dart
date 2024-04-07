@@ -19,4 +19,30 @@ class AuthService {
     // finally, lets sign in
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
+
+  // Google sign in
+  Future<User?> signInWithGoogleWithDetails() async {
+    // Begin interactive sign-in process
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+    if (gUser != null) {
+      // Obtain auth details from request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+      // Create a new credential for the user
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+
+      // Finally, sign in
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Return the user details
+      return userCredential.user;
+    }
+
+    return null;
+  }
 }

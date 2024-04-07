@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import '../components/hadafi_appbar.dart';
 import '../components/hadafi_drawer.dart';
@@ -20,7 +21,7 @@ class _HomeState extends State<Home> {
   final _textController = TextEditingController();
   bool _isTyping = false;
   final _user = FirebaseAuth.instance.currentUser!;
-  String fullName = "";
+  String? fullName;
 
   @override
   void initState() {
@@ -201,7 +202,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const HadafiAppBar(),
-      drawer: HadafiDrawer(fullname: fullName),
+      drawer: HadafiDrawer(fullname: fullName ?? ''),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHadaf,
         elevation: 3,

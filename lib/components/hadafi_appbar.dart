@@ -30,7 +30,7 @@ class HadafiAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: 40,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset('assets/images/avatar.jpeg'),
+            // child: Image.asset('assets/images/avatar.jpeg'),
           ),
         ),
       ],

@@ -206,7 +206,10 @@ class _LoginState extends State<Login> {
                       action: () {
                         //Perform login with Google
                         debugPrint('Perform login with Google');
-                        AuthService().signInWithGoogle();
+                        AuthService().signInWithGoogle().then((_) {
+                          // Navigate to the home page
+                          Navigator.pushReplacementNamed(context, '/home');
+                        });
                       },
                       imagePath: 'assets/images/googleSignInButton.png',
                     )
