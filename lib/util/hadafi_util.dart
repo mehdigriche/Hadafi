@@ -1,5 +1,6 @@
-// given a hadaf list of completion days
-// is the hadaf completed today
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:hadafi/model/hadaf.dart';
 
 bool isHadafCompletedToday(List<DateTime> completedDays) {
@@ -37,4 +38,45 @@ Map<DateTime, int> prepHeatMapDataset(List<Hadaf> hadafs) {
 bool isFullNameVerified(String fullname) {
   final RegExp nameRegExp = RegExp('(^[A-Za-z]{3,16})');
   return nameRegExp.hasMatch(fullname);
+}
+
+// fetch user details
+Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails(
+    User? currentUser) async {
+  return await FirebaseFirestore.instance
+      .collection("Users")
+      .doc(currentUser!.email)
+      .get();
+}
+
+// get user fullname
+Future<String> displayUserName(User? currentUser) async {
+  if (currentUser != null) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await getUserDetails(currentUser);
+    if (snapshot.exists) {
+      var data = snapshot.data();
+      debugPrint(data.toString());
+      if (data != null && data.containsKey('fullname')) {
+        return data['fullname'];
+      }
+    }
+  }
+  return 'User not found';
+}
+
+// get user birthday
+Future<String> displayBirthDay(User? currentUser) async {
+  if (currentUser != null) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await getUserDetails(currentUser);
+    if (snapshot.exists) {
+      var data = snapshot.data();
+      debugPrint(data.toString());
+      if (data != null && data.containsKey('birthday')) {
+        return data['birthday'];
+      }
+    }
+  }
+  return 'User not found';
 }

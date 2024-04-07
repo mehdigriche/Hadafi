@@ -5,13 +5,13 @@ import 'package:hadafi/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class HadafiDrawer extends StatelessWidget {
-  final String username;
-  const HadafiDrawer({super.key, required this.username});
+  final String fullname;
+  const HadafiDrawer({super.key, required this.fullname});
 
   void signOut(BuildContext context) async {
     debugPrint('Performing Logout');
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, '/login');
+    if (context.mounted) Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -32,7 +32,7 @@ class HadafiDrawer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Center(
                   child: Text(
-                    'Welcome to Hadafis, $username',
+                    'Welcome to Hadafis, \n $fullname',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,

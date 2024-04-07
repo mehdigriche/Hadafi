@@ -20,13 +20,21 @@ class _HomeState extends State<Home> {
   final _textController = TextEditingController();
   bool _isTyping = false;
   final _user = FirebaseAuth.instance.currentUser!;
+  String fullName = "";
 
   @override
   void initState() {
     // read the existing hadafs on app startup
     Provider.of<HadafiDatabase>(context, listen: false).readHadafs();
-
+    _loadFullName();
     super.initState();
+  }
+
+  void _loadFullName() async {
+    String? fullName = await displayUserName(_user);
+    setState(() {
+      this.fullName = fullName;
+    });
   }
 
   // create new hadaf
@@ -193,7 +201,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const HadafiAppBar(),
-      drawer: HadafiDrawer(username: _user.email!),
+      drawer: HadafiDrawer(fullname: fullName),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHadaf,
         elevation: 3,

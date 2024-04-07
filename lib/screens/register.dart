@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,10 +43,16 @@ class _RegisterState extends State<Register> {
     );
     // try sign up
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // create user
+      UserCredential? userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+
+      // add user to firestore
+      cellectUserToFirestore(userCredential);
+
       // pop the loading circle
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
@@ -55,6 +62,20 @@ class _RegisterState extends State<Register> {
       registerErrorPopup(e.code);
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  // Collect user in firestore
+  Future<void> cellectUserToFirestore(UserCredential? userCredential) async {
+    if (userCredential != null && userCredential.user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set({
+        'email': userCredential.user!.email,
+        'fullname': _fullNameController.text,
+        'birthday': _birthdayController.text
+      });
     }
   }
 

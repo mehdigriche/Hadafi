@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hadafi/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class HadafiTextFieldDatePicker extends StatelessWidget {
   final dynamic controller;
@@ -20,18 +22,28 @@ class HadafiTextFieldDatePicker extends StatelessWidget {
         controller: controller,
         onTap: onTap,
         readOnly: true,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        style: TextStyle(
+          color: Provider.of<ThemeProvider>(context).isDarkMode
+              ? Colors.white
+              : Colors.grey.shade800,
+        ),
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.tertiary),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade700),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
-          fillColor: Colors.grey.shade200,
+          fillColor: Theme.of(context).colorScheme.tertiary,
           filled: true,
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
+          hintStyle: TextStyle(
+            color: Provider.of<ThemeProvider>(context).isDarkMode
+                ? Colors.grey
+                : Colors.grey.shade400,
+          ),
         ),
       ),
     );
