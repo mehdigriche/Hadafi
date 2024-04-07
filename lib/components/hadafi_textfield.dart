@@ -22,6 +22,7 @@ class HadafiTextField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         obscureText: isPassword,
+        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey.shade400),

@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hadafi/util/hadafi_util.dart';
 import '../screens/home.dart';
 import '../components/hadafi_button.dart';
 import '../components/hadafi_social_signin_button.dart';
@@ -22,6 +23,7 @@ class _RegisterState extends State<Register> {
 
   bool _isEmailVerified = false;
   bool _isPasswordVerified = false;
+  bool _isFullNameVerified = false;
 
   // Sign user in method
   void signUpUser() async {
@@ -42,12 +44,7 @@ class _RegisterState extends State<Register> {
         password: _passwordController.text,
       );
       // pop the loading circle
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -72,13 +69,13 @@ class _RegisterState extends State<Register> {
 
   // Verify user inputs
   bool isSignUpEnabled() {
-    return _isPasswordVerified && _isEmailVerified;
+    return _isPasswordVerified && _isEmailVerified && _isFullNameVerified;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -99,7 +96,7 @@ class _RegisterState extends State<Register> {
                   'Let\'s create an account for you!',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey[700],
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
 
@@ -113,10 +110,10 @@ class _RegisterState extends State<Register> {
 
                     // run name checker
                     setState(() {
-                      _isEmailVerified = value.toString().contains("@");
+                      _isFullNameVerified = isFullNameVerified(value);
                     });
                   },
-                  hintText: 'Enter your email',
+                  hintText: 'Enter your full name',
                   isPassword: false,
                 ),
 
@@ -188,20 +185,22 @@ class _RegisterState extends State<Register> {
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
                           'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary),
                         ),
                       ),
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                     ],
@@ -236,7 +235,8 @@ class _RegisterState extends State<Register> {
                   children: [
                     Text(
                       'Already have an account?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(

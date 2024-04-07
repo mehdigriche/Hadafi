@@ -32,3 +32,9 @@ Map<DateTime, int> prepHeatMapDataset(List<Hadaf> hadafs) {
   }
   return dataset;
 }
+
+// verify full name
+bool isFullNameVerified(String fullname) {
+  final RegExp nameRegExp = RegExp('(^[A-Za-z]{3,16})');
+  return nameRegExp.hasMatch(fullname);
+}

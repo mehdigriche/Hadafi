@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hadafi/database/hadafi_database.dart';
-import 'package:hadafi/screens/home.dart';
-import 'package:hadafi/screens/login.dart';
-import 'package:hadafi/screens/profile.dart';
-import 'package:hadafi/screens/register.dart';
-import 'package:hadafi/screens/settings.dart';
-import 'package:hadafi/theme/dark_mode.dart';
+import 'package:hadafi/screens/onboarding.dart';
+import '../database/hadafi_database.dart';
+import '../screens/home.dart';
+import '../screens/login.dart';
+import '../screens/profile.dart';
+import '../screens/register.dart';
+import '../screens/settings.dart';
 import '../theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -28,14 +28,6 @@ void main() async {
 
   // initialize local database
   await HadafiDatabase.initialize();
-  await HadafiDatabase().saveFirstLaunchDate();
-
-  // runApp(
-  //   ChangeNotifierProvider(
-  //     create: (context) => ThemeProvider(),
-  //     child: const MyApp(),
-  //   ),
-  // );
 
   runApp(MultiProvider(
     providers: [
@@ -62,9 +54,11 @@ class MyApp extends StatelessWidget {
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Auth(),
+      home: const OnBoarding(),
       theme: Provider.of<ThemeProvider>(context).themeData,
       routes: {
+        '/onboarding': (context) => const OnBoarding(),
+        '/auth': (context) => const Auth(),
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
         '/home': (context) => const Home(),

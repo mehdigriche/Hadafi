@@ -8,9 +8,10 @@ class HadafiDrawer extends StatelessWidget {
   final String username;
   const HadafiDrawer({super.key, required this.username});
 
-  void signOut() async {
+  void signOut(BuildContext context) async {
     debugPrint('Performing Logout');
     await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -107,8 +108,7 @@ class HadafiDrawer extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('L O G O U T'),
               onTap: () {
-                Navigator.pop(context);
-                signOut();
+                signOut(context);
               },
             ),
           ),

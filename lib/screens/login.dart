@@ -40,7 +40,7 @@ class _LoginState extends State<Login> {
         password: _passwordController.text,
       );
       // pop the loading circle
-      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -89,8 +89,9 @@ class _LoginState extends State<Login> {
                 Text(
                   'Welcome back, you\'ve been missed!',
                   style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
 
@@ -138,7 +139,9 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.inversePrimary),
                       ),
                     ],
                   ),
@@ -163,20 +166,22 @@ class _LoginState extends State<Login> {
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
                           'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary),
                         ),
                       ),
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                     ],
@@ -214,7 +219,8 @@ class _LoginState extends State<Login> {
                   children: [
                     Text(
                       'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
