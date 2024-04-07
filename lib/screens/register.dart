@@ -1,8 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hadafi/util/hadafi_util.dart';
-import '../screens/home.dart';
+import 'package:hadafi/components/hadafi_textfield_datepicker.dart';
+import 'package:intl/intl.dart';
+import '../util/hadafi_util.dart';
 import '../components/hadafi_button.dart';
 import '../components/hadafi_social_signin_button.dart';
 import '../components/hadafi_textfield.dart';
@@ -20,10 +21,12 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _birthdayController = TextEditingController();
 
   bool _isEmailVerified = false;
   bool _isPasswordVerified = false;
   bool _isFullNameVerified = false;
+  bool _isBirthdayVerified = false;
 
   // Sign user in method
   void signUpUser() async {
@@ -69,7 +72,29 @@ class _RegisterState extends State<Register> {
 
   // Verify user inputs
   bool isSignUpEnabled() {
-    return _isPasswordVerified && _isEmailVerified && _isFullNameVerified;
+    return _isPasswordVerified &&
+        _isEmailVerified &&
+        _isFullNameVerified &&
+        _isBirthdayVerified;
+  }
+
+  // date picker for birthday
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _birthdayController.text = DateFormat('yyyy-MM-dd')
+            .format(picked); // Format the date as needed
+        _isBirthdayVerified = true;
+      });
+    } else {
+      _isBirthdayVerified = false;
+    }
   }
 
   @override
@@ -115,6 +140,14 @@ class _RegisterState extends State<Register> {
                   },
                   hintText: 'Enter your full name',
                   isPassword: false,
+                ),
+
+                const SizedBox(height: 10),
+
+                HadafiTextFieldDatePicker(
+                  controller: _birthdayController,
+                  hintText: 'Select your birthday',
+                  onTap: () => _selectDate(context),
                 ),
 
                 const SizedBox(height: 10),

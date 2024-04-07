@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-class HadafiTextField extends StatelessWidget {
+class HadafiTextFieldDatePicker extends StatelessWidget {
   final dynamic controller;
   final String hintText;
-  final bool isPassword;
-  final dynamic onChanged;
+  final dynamic onTap;
 
-  const HadafiTextField({
+  const HadafiTextFieldDatePicker({
     super.key,
     required this.controller,
     required this.hintText,
-    required this.isPassword,
-    this.onChanged,
+    required this.onTap,
   });
 
   @override
@@ -20,8 +18,8 @@ class HadafiTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         controller: controller,
-        onChanged: onChanged,
-        obscureText: isPassword,
+        onTap: onTap,
+        readOnly: true,
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

@@ -26,7 +26,6 @@ class _OnBoardingState extends State<OnBoarding> {
       builder: (context, snapshot) {
         // once the data is available -> show Auth Page
         if (snapshot.hasData) {
-          debugPrint('${snapshot.data}');
           return const Auth();
         }
         // handle case where no data is returned

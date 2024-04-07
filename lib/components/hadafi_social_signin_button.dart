@@ -12,7 +12,7 @@ class HadafiSocialSignInButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(8),
         child: GestureDetector(
           onTap: action,
           child: Image.asset(
